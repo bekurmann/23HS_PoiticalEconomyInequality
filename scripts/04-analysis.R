@@ -2,6 +2,15 @@
 # analysis
 # ##############################################################
 
+library(here)
+
+# checkout wd
+here()
+
+getwd()
+setwd(here())
+getwd()
+
 # ##############################################################
 # loading data
 data <- readRDS("data/data.rds")

@@ -4,6 +4,14 @@
 
 # dependencies
 library(tidyverse)
+library(here)
+
+# checkout wd
+here()
+
+getwd()
+setwd(here())
+getwd()
 
 # read raw data
 raw_data <- readRDS("data/raw_data.rds")

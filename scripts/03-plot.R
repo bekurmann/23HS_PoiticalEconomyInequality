@@ -6,6 +6,14 @@
 library(tidyverse)
 library(sf)
 library(viridis)
+library(here)
+
+# checkout wd
+here()
+
+getwd()
+setwd(here())
+getwd()
 
 # ##############################################################
 # theming

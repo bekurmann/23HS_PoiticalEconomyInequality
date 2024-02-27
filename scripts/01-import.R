@@ -4,12 +4,22 @@
 
 # dependencies
 #install.packages("tidyverse")
+#install.packages("readxl")
+#install.packages("sf")
+#install.packages("viridis")
+#installpackages("here")
+
+# loading
 library(tidyverse)
 library(readxl)
+library(here)
 
 # checkout wd
+here()
+
 getwd()
-setwd("/home/benjamin/nc.hirsgaertli.ch/R/23HS_InequalityPaper/")
+setwd(here())
+getwd()
 
 # ##############################################################
 # reading raw income data ---
