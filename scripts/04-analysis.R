@@ -20,7 +20,6 @@ model1 <- lm(wahlbeteiligung2023 ~
                anteil65plus + 
                flaeche_landwirtschaft,
              data = data)
-?lm()
 
 model1_2019 <- lm(wahlbeteiligung2019 ~ 
                gini_steink_percent + 
@@ -35,13 +34,37 @@ model1_2019 <- lm(wahlbeteiligung2019 ~
                flaeche_landwirtschaft,
              data = data)
 
+model1_no_welfareRate <- lm(wahlbeteiligung2023 ~ 
+               gini_steink_percent + 
+               median_steink +
+               # control
+               einwohner + 
+               auslaenderanteil +
+               leerwohnungsziffer + 
+               anteil20bis64 +
+               anteil65plus + 
+               flaeche_landwirtschaft,
+             data = data)
+
+model1_no_welfareRate_2019 <- lm(wahlbeteiligung2019 ~ 
+                              gini_steink_percent + 
+                              median_steink +
+                              # control
+                              einwohner + 
+                              auslaenderanteil +
+                              leerwohnungsziffer + 
+                              anteil20bis64 +
+                              anteil65plus + 
+                              flaeche_landwirtschaft,
+                            data = data)
+
 summary(model1)
 summary(model1_2019)
+summary(model1_no_welfareRate)
+summary(model1_no_welfareRate_2019)
 
 # why anteil65plus is NA
 summary(data)
-?vif
-vif(data)
 
 # model 2
 # turnout ~ median income
