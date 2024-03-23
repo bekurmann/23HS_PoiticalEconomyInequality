@@ -14,7 +14,7 @@ setwd(here())
 getwd()
 
 # read raw data
-raw_data <- readRDS("data/raw_data.rds")
+raw_data <- readRDS("data/raw_income_data.rds")
 
 # ##############################################################
 # Calculate any additional variables or transformations you need
@@ -78,4 +78,4 @@ str(data)
 
 # ##############################################################
 # save data as RDS
-saveRDS(data, file = "data/data.rds")
+saveRDS(data, file = "data/income_data.rds")

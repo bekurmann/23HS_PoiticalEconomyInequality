@@ -30,11 +30,18 @@ getwd()
 # median_steink   Steuerbares Medianeinkommen, in Franken
 # gini_steink     Gini-Koeffizient des steuerbaren Einkommens
 ?read_excel()
+
+# income data
 raw_income <- read_excel(path = "data/raw_np-2019.xlsx",
                        sheet = "Gemeinden - Communes")
 
 raw_income <- raw_income %>% 
   select(c(ktnr, ktname, gdenr, gdename, mean_steink, median_steink, gini_steink))
+
+# turnout data
+raw_turnout_data <- read_excel(path = "data/stimm_wahlbeteiligung.xlsx",
+                          sheet = "T17.2.2.4.3")
+raw_turnout_data <- na.omit(raw_turnout_data)
 
 # ##############################################################
 # reading raw participation data
@@ -79,8 +86,9 @@ raw_municipality <- raw_municipality %>%
 merge_income_turnout <- merge(raw_income, raw_turnout2019, by.x = "gdenr", by.y = "gemeinde_nummer")
 
 # joining together merge_income_turnout and raw_municipality
-raw_data <- merge(merge_income_turnout, raw_municipality, by.x = "gdenr", by.y ="CODE_REGION")
+raw_income_data <- merge(merge_income_turnout, raw_municipality, by.x = "gdenr", by.y ="CODE_REGION")
 
 # save raw data as RDS
-saveRDS(raw_data, file = "data/raw_data.rds")
+saveRDS(raw_income_data, file = "data/raw_income_data.rds")
+saveRDS(raw_turnout_data, file = "data/raw_turnout_data.rds")
 
