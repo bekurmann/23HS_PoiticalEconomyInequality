@@ -37,7 +37,7 @@ theme_map <- function(...) {
 # ##############################################################
 # income
 # loading data
-data <- readRDS("data/data.rds")
+data <- readRDS("data/income_data.rds")
 
 # loading swiss shapefile
 # von hier: https://www.swisstopo.admin.ch/de/geodata/landscape/boundaries3d.html#download
@@ -156,7 +156,7 @@ merge_swiss_municipalities$gini_category <- cut(
 merge_swiss_municipalities$turnout_category <- cut(
   merge_swiss_municipalities$wahlbeteiligung2023, 
   breaks=c(-Inf, 40, 60, Inf), 
-  labels=c("Low", "Medium", "High"))
+  labels=c("t_Low", "t_Medium", "t_High"))
 
 # Step 3: Combine the categories
 merge_swiss_municipalities$combined_category <- paste(
@@ -164,15 +164,15 @@ merge_swiss_municipalities$combined_category <- paste(
   merge_swiss_municipalities$turnout_category)
 
 # Step 4: Define a color for each combined category
-color_mapping <- c("g_Low Low" = "#CABED0", 
-                   "g_Low Medium" = "#BC7C8F", 
-                   "g_Low High" = "#AE3A4E",
-                   "g_Medium Low" = "#89A1C8", 
-                   "g_Medium Medium" = "#806A8A", 
-                   "g_Medium High" = "#77324C",
-                   "g_High Low" = "#4885C1",
-                   "g_High Medium" = "#435786", 
-                   "g_High High" = "#3F2949")
+color_mapping <- c("g_Low t_Low" = "#CABED0", 
+                   "g_Low t_Medium" = "#BC7C8F", 
+                   "g_Low t_High" = "#AE3A4E",
+                   "g_Medium t_Low" = "#89A1C8", 
+                   "g_Medium t_Medium" = "#806A8A", 
+                   "g_Medium t_High" = "#77324C",
+                   "g_High t_Low" = "#4885C1",
+                   "g_High t_Medium" = "#435786", 
+                   "g_High t_High" = "#3F2949")
 
 ggplot() +
   geom_sf(data = swiss_map, fill = "white", color="grey") +

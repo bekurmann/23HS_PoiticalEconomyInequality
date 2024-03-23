@@ -13,7 +13,7 @@ getwd()
 
 # ##############################################################
 # loading data
-data <- readRDS("data/data.rds")
+data <- readRDS("data/income_data.rds")
 
 # model 1
 # turnout 2023 ~ gini_steink_percent
