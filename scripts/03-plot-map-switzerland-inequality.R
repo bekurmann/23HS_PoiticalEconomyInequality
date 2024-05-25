@@ -71,7 +71,7 @@ merge_swiss_municipalities <- merge(swiss_municipalities, data, by.x = "id", by.
 
 # ##############################################################
 # plot map turnout 2019
-ggplot() +
+plot_turnout2019 <- ggplot() +
   # basemap
   geom_sf(data = swiss_map, fill = "white", color="grey") + 
   # Main municipal layer with Viridis color scale
@@ -88,6 +88,10 @@ ggplot() +
   theme_map()
 
 # ##############################################################
+# save
+ggsave(filename = "img/geo_turnout2019.png", plot = plot_turnout2019, width = 8, height = 6, dpi = 300)
+
+# ##############################################################
 # create gini categories
 merge_swiss_municipalities$gini_steink_percent_category <- cut(merge_swiss_municipalities$gini_steink_percent,
                                                                breaks = c(-Inf, 40, 45, 50, 55, 60, 65, Inf),
@@ -95,7 +99,7 @@ merge_swiss_municipalities$gini_steink_percent_category <- cut(merge_swiss_munic
                                                                right = FALSE)
 
 # Plot map with income categories
-ggplot() +
+plot_gini <- ggplot() +
   geom_sf(data = swiss_map, fill = "white", color="grey") + 
   geom_sf(data = merge_swiss_municipalities, aes(fill = gini_steink_percent_category), color = "white", size = 0.1) +
   scale_fill_viridis_d(option = "magma",
@@ -107,6 +111,10 @@ ggplot() +
   theme_map()
 
 # ##############################################################
+# save
+ggsave(filename = "img/geo_gini.png", plot = plot_gini, width = 8, height = 6, dpi = 300)
+
+# ##############################################################
 # Create income categories
 merge_swiss_municipalities$income_category <- cut(merge_swiss_municipalities$median_steink,
                                                   breaks = c(-Inf, 17000, 32000, 35000, 38000, 41000, 47000, 57000, 67000, 77000, Inf),
@@ -114,7 +122,7 @@ merge_swiss_municipalities$income_category <- cut(merge_swiss_municipalities$med
                                                   right = FALSE)
 
 # Plot map with income categories
-ggplot() +
+plot_income <- ggplot() +
   geom_sf(data = swiss_map, fill = "white", color="grey") + 
   geom_sf(data = merge_swiss_municipalities, aes(fill = income_category), color = "white", size = 0.1) +
   scale_fill_viridis_d(option = "magma",
@@ -124,6 +132,10 @@ ggplot() +
   geom_sf(data = swiss_rivers, fill = "#D6F1FF", color = "#D6F1FF") +
   labs(x = NULL, y = NULL, title = "Swiss Municipalities (settlement area) and median income") +
   theme_map()
+
+# ##############################################################
+# save
+ggsave(filename = "img/geo_income.png", plot = plot_income, width = 8, height = 6, dpi = 300)
 
 # ##############################################################
 # plot map bivariate turnout + gini (not used)
