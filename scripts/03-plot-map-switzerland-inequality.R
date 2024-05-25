@@ -70,69 +70,12 @@ merge_swiss_map <- merge(swiss_map, data, by.x = "BFS_NUMMER", by.y = "gdenr")
 merge_swiss_municipalities <- merge(swiss_municipalities, data, by.x = "id", by.y = "gdenr")
 
 # ##############################################################
-# plot map (settlement area) Gini-Index in %
+# plot map turnout 2019
 ggplot() +
   # basemap
   geom_sf(data = swiss_map, fill = "white", color="grey") + 
   # Main municipal layer with Viridis color scale
-  geom_sf(data = merge_swiss_municipalities, aes(fill = gini_steink_percent), color = "white", size = 0.1) +
-  scale_fill_viridis(option = "magma", alpha = 0.8, begin = 0.1, end = 0.9, direction = 1,
-                     guide = guide_legend(keyheight = unit(5, "mm"), title.position = "top", reverse = TRUE)) + 
-  # Lakes and rivers
-  geom_sf(data = swiss_lakes, fill = "#D6F1FF", color = "#D6F1FF") +
-  geom_sf(data = swiss_rivers, fill = "#D6F1FF", color = "#D6F1FF") +
-  # Titles and theme
-  labs(x = NULL, y = NULL, title = "Swiss Municipalities (settlement area) and Gini-Index (in %)") +
-  # add theme (function above)
-  theme_map()
-
-# ##############################################################
-# find out min und max (for scale_fill_viridis)
-summary(merge_swiss_municipalities$median_steink)
-# plot map (settlement area) median income
-ggplot() +
-  # basemap
-  geom_sf(data = swiss_map, fill = "white", color="grey") + 
-  # Main municipal layer with Viridis color scale
-  geom_sf(data = merge_swiss_municipalities, aes(fill = median_steink), color = "white", size = 0.1) +
-  scale_fill_viridis(option = "magma", limits = c(17000, 100000),
-                     alpha = 0.8, begin = 0.1, end = 0.9, direction = 1,
-                     guide = guide_legend(keyheight = unit(5, "mm"), title.position = "top", reverse = TRUE)) + 
-  # Lakes and rivers
-  geom_sf(data = swiss_lakes, fill = "#D6F1FF", color = "#D6F1FF") +
-  geom_sf(data = swiss_rivers, fill = "#D6F1FF", color = "#D6F1FF") +
-  # Titles and theme
-  labs(x = NULL, y = NULL, title = "Swiss Municipalities (settlement area) and median income") +
-  # add theme (function above)
-  theme_map()
-
-# ##############################################################
-# find out min und max (for scale_fill_viridis)
-summary(merge_swiss_municipalities$mean_steink)
-# plot map (settlement area) average income
-ggplot() +
-  # basemap
-  geom_sf(data = swiss_map, fill = "white", color="grey") + 
-  # Main municipal layer with Viridis color scale
-  geom_sf(data = merge_swiss_municipalities, aes(fill = mean_steink), color = "white", size = 0.1) +
-  scale_fill_viridis(option = "magma", limits = c(17500, 110000),
-                     alpha = 0.8, begin = 0.1, end = 0.9, direction = 1,
-                     guide = guide_legend(keyheight = unit(5, "mm"), title.position = "top", reverse = TRUE)) + 
-  # Lakes and rivers
-  geom_sf(data = swiss_lakes, fill = "#D6F1FF", color = "#D6F1FF") +
-  geom_sf(data = swiss_rivers, fill = "#D6F1FF", color = "#D6F1FF") +
-  # Titles and theme
-  labs(x = NULL, y = NULL, title = "Swiss Municipalities (settlement area) and average income") +
-  # add theme (function above)
-  theme_map()
-
-# ##############################################################
-# plot map turnout 2023
-ggplot() +
-  # basemap
-  geom_sf(data = swiss_map, fill = "white", color="grey") + 
-  # Main municipal layer with Viridis color scale
-  geom_sf(data = merge_swiss_municipalities, aes(fill = wahlbeteiligung2023), color = "white", size = 0.1) +
+  geom_sf(data = merge_swiss_municipalities, aes(fill = wahlbeteiligung2019), color = "white", size = 0.1) +
   scale_fill_viridis(option = "magma", alpha = 0.8, begin = 0.1, end = 0.9, direction = 1,
                      guide = guide_legend(keyheight = unit(5, "mm"), title.position = "top", reverse = TRUE)) + 
   # Lakes and rivers
@@ -145,7 +88,45 @@ ggplot() +
   theme_map()
 
 # ##############################################################
-# plot map bivariate turnout + gini
+# create gini categories
+merge_swiss_municipalities$gini_steink_percent_category <- cut(merge_swiss_municipalities$gini_steink_percent,
+                                                               breaks = c(-Inf, 40, 45, 50, 55, 60, 65, Inf),
+                                                               labels = c("Below 40%", "40%+", "45%+", "50%+", "55%+", "60%+", "65% and more"),
+                                                               right = FALSE)
+
+# Plot map with income categories
+ggplot() +
+  geom_sf(data = swiss_map, fill = "white", color="grey") + 
+  geom_sf(data = merge_swiss_municipalities, aes(fill = gini_steink_percent_category), color = "white", size = 0.1) +
+  scale_fill_viridis_d(option = "magma",
+                       begin = 0.1, end = 0.9, direction = 1,
+                       guide = guide_legend(keyheight = unit(5, "mm"), title.position = "top", reverse = TRUE)) + 
+  geom_sf(data = swiss_lakes, fill = "#D6F1FF", color = "#D6F1FF") +
+  geom_sf(data = swiss_rivers, fill = "#D6F1FF", color = "#D6F1FF") +
+  labs(x = NULL, y = NULL, title = "Swiss Municipalities (settlement area) and Gini-Index (in %)") +
+  theme_map()
+
+# ##############################################################
+# Create income categories
+merge_swiss_municipalities$income_category <- cut(merge_swiss_municipalities$median_steink,
+                                                  breaks = c(-Inf, 17000, 32000, 35000, 38000, 41000, 47000, 57000, 67000, 77000, Inf),
+                                                  labels = c("Below 17k", "17k-32k", "32k-35k", "35k-38k", "38k-41k", "41k-47k", "47k-57k", "57k-67k", "67k-77k", "77k and more"),
+                                                  right = FALSE)
+
+# Plot map with income categories
+ggplot() +
+  geom_sf(data = swiss_map, fill = "white", color="grey") + 
+  geom_sf(data = merge_swiss_municipalities, aes(fill = income_category), color = "white", size = 0.1) +
+  scale_fill_viridis_d(option = "magma",
+                       begin = 0.1, end = 0.9, direction = 1,
+                       guide = guide_legend(keyheight = unit(5, "mm"), title.position = "top", reverse = TRUE)) + 
+  geom_sf(data = swiss_lakes, fill = "#D6F1FF", color = "#D6F1FF") +
+  geom_sf(data = swiss_rivers, fill = "#D6F1FF", color = "#D6F1FF") +
+  labs(x = NULL, y = NULL, title = "Swiss Municipalities (settlement area) and median income") +
+  theme_map()
+
+# ##############################################################
+# plot map bivariate turnout + gini (not used)
 
 # Categorize your data (this is a simplification; you should use appropriate cutoffs)
 merge_swiss_municipalities$gini_category <- cut(

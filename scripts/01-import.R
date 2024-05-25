@@ -7,11 +7,13 @@
 #install.packages("readxl")
 #install.packages("sf")
 #install.packages("viridis")
-#installpackages("here")
+#install.packages("here")
+#install.packages("haven")
 
 # loading
 library(tidyverse)
 library(readxl)
+library(haven)
 library(here)
 
 # checkout wd
@@ -91,4 +93,14 @@ raw_income_data <- merge(merge_income_turnout, raw_municipality, by.x = "gdenr",
 # save raw data as RDS
 saveRDS(raw_income_data, file = "data/raw_income_data.rds")
 saveRDS(raw_turnout_data, file = "data/raw_turnout_data.rds")
+
+# ##############################################################
+# importing selects
+selects2015 <- read_dta("data/selects2015/726_Selects2015_PES_Data_v1.03.dta")
+selects2019 <- read_csv("data/selects2019/1179_Selects2019_PES_Data_v1.1.0.csv")
+
+# save selects
+saveRDS(selects2015, file = "data/raw_selects2015.rds")
+saveRDS(selects2019, file = "data/raw_selects2019.rds")
+
 
