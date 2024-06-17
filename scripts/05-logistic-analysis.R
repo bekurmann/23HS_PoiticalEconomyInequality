@@ -51,12 +51,52 @@ predicted_probabilities <- predict(logistic_model, type = "response")
 cleaned_data <- cleaned_data %>%
   mutate(predicted_turnout = predicted_probabilities)
 
+# plotting actual turnout vs. predicted probabilities
+ggplot(cleaned_data, aes(x = predicted_turnout, y = turnout)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(title = "Actual Turnout vs. Predicted Turnout",
+       x = "Predicted Turnout Probability",
+       y = "Actual Turnout") +
+  theme_minimal()
+
 # pseudo R2 values
 pseudo_r2 <- pR2(logistic_model)
 print(pseudo_r2)
 
 # ##############################################################
-# Generate and plot effects for each predictor
+# multicollinearity and distribution of categories for turnout
+
+# multicollinearity 
+collinearity_results <- check_collinearity(logistic_model)
+print(collinearity_results)
+
+# convert collinearity results to a data frame for plotting
+vif_data <- as.data.frame(collinearity_results)
+# plot VIF values
+plot_vif <- ggplot(vif_data, aes(x = Term, y = VIF)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Variance Inflation Factor (VIF) for Each Predictor",
+       x = "Predictor",
+       y = "VIF") +
+  theme_minimal()
+# save
+ggsave(filename = "img/vif.png", plot = plot_vif, width = 8, height = 6, dpi = 300)
+
+# Plot the distribution of the turnout variable
+turnout_dist <- ggplot(cleaned_data, aes(x = as.factor(turnout))) +
+  geom_bar(fill = "skyblue") +
+  labs(title = "Distribution of Turnout",
+       x = "Turnout",
+       y = "Count") +
+  scale_x_discrete(labels = c("0" = "Did Not Turn Out", "1" = "Turned Out")) +
+  theme_minimal()
+# save
+ggsave(filename = "img/turnout_dist.png", plot = turnout_dist, width = 8, height = 6, dpi = 300)
+
+# ##############################################################
+# generate and plot effects for each predictor
 effects_gender <- ggpredict(logistic_model, terms = "gender")
 plot_effects_gender <- plot(effects_gender) + labs(title = "Effect of Gender on Turnout")
 # save
