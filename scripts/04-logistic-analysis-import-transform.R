@@ -86,7 +86,8 @@ raw_income <- read_excel(path = "data/raw_np-2019.xlsx",
 
 raw_income <- raw_income %>% 
   select(c(Einheit, ktnr, ktname, mean_steink, median_steink, gini_steink)) %>% 
-  filter(Einheit == "Total")
+  filter(Einheit == "Total") %>% 
+  mutate(gini = gini_steink * 100)
 
 selects2019 <- selects2019 %>%
   left_join(raw_income, by = c("canton" = "ktnr"))
